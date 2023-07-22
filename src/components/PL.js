@@ -4,9 +4,27 @@ const PL = () => {
   return (
     <div>
       <BarChart
-        xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C'] }]}
-        series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
-        width={500}
+        xAxis={[
+          {
+            scaleType: 'band',
+            data: [
+              '1',
+              '2',
+              '3',
+              '4',
+              '5',
+              '6',
+              '7',
+              '8',
+              '9',
+              '10',
+              '11',
+              '12',
+            ],
+          },
+        ]}
+        series={[{ data: [2, 5, 6, -5, 0, 0, 0, 0, 0, 0, 0, 0] }]}
+        width={700}
         height={300}
       />
     </div>

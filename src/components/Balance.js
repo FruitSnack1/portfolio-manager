@@ -11,7 +11,7 @@ const Balance = () => {
             data: [2, 5.5, 2, 8.5, 1.5, 5],
           },
         ]}
-        width={500}
+        width={700}
         height={300}
       />
     </div>
