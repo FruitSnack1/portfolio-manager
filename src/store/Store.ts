@@ -1,20 +1,27 @@
 import { makeAutoObservable } from 'mobx'
-import { data } from './data'
+// import { data } from './data'
+import { randomUUID } from 'crypto'
+import { v4 as uuid } from 'uuid'
 
 type LogData = {
   asset: string
   deposit: number
   balance: number
   date: string
+  id: string
 }
 
-type Asset = {
+export type Asset = {
   name: string
   balance: number
   deposit: number
   plPercent: string
   pl: number
   share: string
+}
+
+type AssetData = {
+  balance: number
 }
 
 class Store {
@@ -41,7 +48,7 @@ class Store {
   }
 
   get assets(): Asset[] {
-    const names = Array.from(new Set(data.map((item) => item.asset)))
+    const names = Array.from(new Set(this.data.map((item) => item.asset)))
     const results = []
     for (const name of names) {
       const balance =
@@ -72,9 +79,9 @@ class Store {
     }))
   }
 
-  get historyChartData(): Record<string, any>[] {
+  historyChartData(percent: boolean, filter?: string): Record<string, any>[] {
     let results: Record<string, any>[] = []
-    const assets = this.assets
+    const assets = filter ? [{ name: filter }] : this.assets
 
     for (const asset of assets) {
       const items = this.data.filter((item) => item.asset === asset.name)
@@ -83,9 +90,14 @@ class Store {
       for (const item of items) {
         let pushed = false
         const balance = item.balance - item.deposit
-        const diff = lastBalance
-          ? ((balance / lastBalance - 1) * 100).toFixed(2)
-          : '0'
+        let diff = ''
+        if (percent) {
+          diff = lastBalance
+            ? ((balance / lastBalance - 1) * 100).toFixed(2)
+            : '0'
+        } else {
+          diff = lastBalance ? (balance - lastBalance).toString() : '0'
+        }
         if (lastBalance === 0) {
           lastBalance = item.balance
           continue
@@ -111,10 +123,51 @@ class Store {
 
   private formatMonth(date: string) {
     const d = new Date(date)
-    return `${d.getDate()}/${d.getFullYear()}`
+    return `${d.getMonth() + 1}/${d.getFullYear()}`
+  }
+
+  get balanceChartData(): Record<string, any>[] {
+    let results = []
+    const dates = Array.from(new Set(this.data.map((item) => item.date)))
+    for (const date of dates) {
+      const items = this.data.filter((item) => item.date === date)
+      const balance = items.reduce((a, b) => a + b.balance, 0)
+      results.push({
+        month: this.formatMonth(date),
+        balance,
+      })
+    }
+    return results
+  }
+
+  getAssetData(asset: string): AssetData {
+    return {
+      balance:
+        this.latests().find((item) => item.asset === asset)?.balance ?? 0,
+    }
+  }
+
+  remove(id: string): void {
+    console.log('remove', id)
+    const newData = this.data.filter((item) => item.id !== id)
+    console.log(newData)
+    localStorage.setItem('data', JSON.stringify(newData))
+    this.data = newData
+  }
+
+  add(asset: string, date: string, deposit: number, balance: number): void {
+    this.data.push({
+      asset,
+      deposit,
+      balance,
+      date,
+      id: uuid(),
+    })
+
+    localStorage.setItem('data', JSON.stringify(this.data))
   }
 }
 
-const store = new Store(data)
+const store = new Store(JSON.parse(localStorage.getItem('data') ?? '[]'))
 
 export default store

@@ -1,13 +1,15 @@
-import { Dashboard } from '@mui/icons-material'
+import { AccountBalance, Dashboard } from '@mui/icons-material'
 import ListIcon from '@mui/icons-material/List'
 import {
   Box,
   GlobalStyles,
+  Link,
   List,
   ListItem,
   ListItemButton,
   ListItemContent,
   Sheet,
+  Stack,
   Typography,
 } from '@mui/joy'
 import { FC } from 'react'
@@ -53,24 +55,42 @@ const Sidebar: FC = () => {
         <Typography level="title-lg">Portfolio Manager</Typography>
         <ColorSchemeToggle sx={{ ml: 'auto' }} />
       </Box>
-      <List>
-        <ListItem>
-          <ListItemButton onClick={() => navigate('/')}>
-            <Dashboard />
-            <ListItemContent>
-              <Typography level="title-sm">Dashboard</Typography>
-            </ListItemContent>
-          </ListItemButton>
-        </ListItem>
-        <ListItem>
-          <ListItemButton onClick={() => navigate('/logs')}>
-            <ListIcon />
-            <ListItemContent>
-              <Typography level="title-sm">Logs</Typography>
-            </ListItemContent>
-          </ListItemButton>
-        </ListItem>
-      </List>
+      <Stack
+        direction={'column'}
+        justifyContent={'space-between'}
+        sx={{ height: '100%' }}
+      >
+        <List>
+          <ListItem>
+            <ListItemButton onClick={() => navigate('/')}>
+              <Dashboard />
+              <ListItemContent>
+                <Typography level="title-sm">Dashboard</Typography>
+              </ListItemContent>
+            </ListItemButton>
+          </ListItem>
+          <ListItem>
+            <ListItemButton onClick={() => navigate('/assets')}>
+              <AccountBalance />
+              <ListItemContent>
+                <Typography level="title-sm">Assets</Typography>
+              </ListItemContent>
+            </ListItemButton>
+          </ListItem>
+          <ListItem>
+            <ListItemButton onClick={() => navigate('/logs')}>
+              <ListIcon />
+              <ListItemContent>
+                <Typography level="title-sm">Logs</Typography>
+              </ListItemContent>
+            </ListItemButton>
+          </ListItem>
+        </List>
+        <Typography level="body-sm" textAlign={'center'} sx={{ mb: 2 }}>
+          made by{' '}
+          <Link href="https://github.com/fruitsnack1">@FruitSnack1</Link>
+        </Typography>
+      </Stack>
     </Sheet>
   )
 }

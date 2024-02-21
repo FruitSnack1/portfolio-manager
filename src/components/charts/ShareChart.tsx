@@ -1,7 +1,7 @@
 import { PieChart } from '@mui/x-charts'
 import { FC } from 'react'
-import SheetContainer from './SheetConatiner'
-import store from '../store/Store'
+import SheetContainer from '../SheetConatiner'
+import store from '../../store/Store'
 
 const ShareChart: FC = () => {
   return (

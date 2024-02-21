@@ -8,7 +8,7 @@ import { formatPrice } from '../utils'
 const CurrentBalance: FC = () => {
   return (
     <SheetContainer>
-      <Box sx={{ p: 5 }}>
+      <Box sx={{ p: 3 }}>
         <Typography level="h2">{formatPrice(store.balance)}</Typography>
         <Typography color="success" startDecorator={<ArrowDropUp />}>
           {formatPrice(store.balance)} (15.3%)

@@ -7,6 +7,7 @@ import Header from './components/Header'
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import Logs from './pages/Logs'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import Assets from './pages/Assets'
 
 const newTheme = createTheme({ palette: { mode: 'dark' } })
 
@@ -36,6 +37,7 @@ function App() {
                 minWidth: 0,
                 height: '100dvh',
                 gap: 1,
+                overflow: 'auto',
               }}
             >
               <Box
@@ -51,6 +53,7 @@ function App() {
               >
                 <Routes>
                   <Route path="/" element={<Dashboard />}></Route>
+                  <Route path="/assets" element={<Assets />}></Route>
                   <Route path="/logs" element={<Logs />}></Route>
                 </Routes>
               </Box>

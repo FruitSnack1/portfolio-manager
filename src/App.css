@@ -1,0 +1,11 @@
+.tooltip {
+  background: 'red' !important;
+}
+
+body {
+  background: 'red';
+  color: aqua;
+}
+.MuiDefaultChartsItemTooltipContent-root {
+  background: 'red' !important;
+}
