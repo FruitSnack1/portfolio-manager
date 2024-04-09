@@ -37,6 +37,7 @@ class Store {
   }
 
   get balance(): number {
+    if (this.latests().length === 0) return 0
     return this.latests().reduce((a, b) => a + b.balance, 0)
   }
 

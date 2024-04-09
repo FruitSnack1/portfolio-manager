@@ -1,8 +1,10 @@
-import { AccountBalance, Dashboard } from '@mui/icons-material'
+import { AccountBalance, Dashboard, Logout } from '@mui/icons-material'
 import ListIcon from '@mui/icons-material/List'
 import {
   Box,
+  Button,
   GlobalStyles,
+  IconButton,
   Link,
   List,
   ListItem,
@@ -15,9 +17,14 @@ import {
 import { FC } from 'react'
 import ColorSchemeToggle from './ColorSchemeToggle'
 import { useNavigate } from 'react-router-dom'
+import loginStore from '../store/loginStore'
+import { observer } from 'mobx-react'
+import { getAuth } from 'firebase/auth'
 
-const Sidebar: FC = () => {
+const Sidebar: FC = observer(() => {
   const navigate = useNavigate()
+  const auth = getAuth()
+
   return (
     <Sheet
       className="Sidebar"
@@ -86,6 +93,33 @@ const Sidebar: FC = () => {
             </ListItemButton>
           </ListItem>
         </List>
+        <List
+          sx={{
+            mt: 'auto',
+            flexGrow: 0,
+          }}
+        >
+          <ListItem>
+            <ListItemButton
+              onClick={() => {
+                if (loginStore.loggedIn) {
+                  auth.signOut()
+                  loginStore.logout()
+                } else {
+                  loginStore.login()
+                  navigate('/login')
+                }
+              }}
+            >
+              <ListItemContent>
+                <Button color="neutral" fullWidth startDecorator={<Logout />}>
+                  {loginStore.loggedIn ? 'Log out' : 'Log in'}
+                </Button>
+                {/* <Typography level="title-sm">Log out</Typography> */}
+              </ListItemContent>
+            </ListItemButton>
+          </ListItem>
+        </List>
         <Typography level="body-sm" textAlign={'center'} sx={{ mb: 2 }}>
           made by{' '}
           <Link href="https://github.com/fruitsnack1">@FruitSnack1</Link>
@@ -93,6 +127,6 @@ const Sidebar: FC = () => {
       </Stack>
     </Sheet>
   )
-}
+})
 
 export default Sidebar
