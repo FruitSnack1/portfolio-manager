@@ -4,6 +4,7 @@ import store, { Asset } from '../store/Store'
 import SheetContainer from '../components/SheetConatiner'
 import AssetHistoryChart from '../components/charts/AssetHistoryChart'
 import { formatPrice } from '../utils'
+import AddNewAsset from '../components/AddNewAsset'
 
 const Assets: FC = () => {
   const [asset, setAsset] = useState<Asset>(store.assets[0])
@@ -30,6 +31,7 @@ const Assets: FC = () => {
               <Option value={asset.name}>{asset.name}</Option>
             ))}
           </Select>
+          <AddNewAsset />
         </Grid>
         <Grid xs={12}>
           <SheetContainer>

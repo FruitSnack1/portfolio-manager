@@ -3,15 +3,23 @@ import Modal from '@mui/joy/Modal'
 import ModalClose from '@mui/joy/ModalClose'
 import Typography from '@mui/joy/Typography'
 import Sheet from '@mui/joy/Sheet'
-import { FormControl, FormLabel, Input, Option, Select } from '@mui/joy'
-import store from '../store/Store'
-import { useState } from 'react'
-import { randomUUID } from 'crypto'
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Option,
+  Select,
+  Snackbar,
+} from '@mui/joy'
+import { useEffect, useState } from 'react'
+import { getAssets } from '../api/assets'
+import { addLog } from '../api/logs'
 
-export default function AddNewModal() {
+export default function AddNewRecord() {
   const [open, setOpen] = useState<boolean>(false)
 
   const [asset, setAsset] = useState<string>('')
+  const [assets, setAssets] = useState<string[]>([])
   const defaultDate = new Date()
   defaultDate.setDate(1)
   const [date, setDate] = useState<string>(
@@ -19,16 +27,48 @@ export default function AddNewModal() {
   )
   const [deposit, setDeposit] = useState<number>()
   const [balance, setBalance] = useState<number>()
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
 
-  const addNew = () => {
-    console.log(addNew)
-    store.add(asset, new Date(date).toISOString(), deposit ?? 0, balance ?? 0)
+  const geta = async () => {
+    const assets = await getAssets()
+    console.log(assets)
+    setAssets(assets.map((asset) => asset.name))
+    // if (assets.length > 0) setAsset(assets[0].name)
+    return assets
+  }
+  useEffect(() => {
+    geta()
+  }, [])
+
+  const addNew = async () => {
+    // addAsset()
+    // store.add(asset, new Date(date).toISOString(), deposit ?? 0, balance ?? 0)
+    const result = await addLog(
+      asset,
+      new Date(date),
+      deposit ?? 0,
+      balance ?? 0
+    )
+    setOpen(false)
+    setSnackbarOpen(true)
   }
 
   return (
     <>
+      <Snackbar
+        open={snackbarOpen}
+        variant="outlined"
+        autoHideDuration={2000}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        Record added
+      </Snackbar>
       <Button variant="outlined" color="neutral" onClick={() => setOpen(true)}>
-        Add new
+        Add new record
       </Button>
       <Modal
         aria-labelledby="modal-title"
@@ -54,9 +94,9 @@ export default function AddNewModal() {
           <Select
             onChange={(_, newValue: string | null) => setAsset(newValue ?? '')}
           >
-            {store.assets.map((asset) => (
-              <Option key={asset.name} value={asset.name}>
-                {asset.name}
+            {assets.map((asset, i) => (
+              <Option key={asset} value={asset}>
+                {asset}
               </Option>
             ))}
           </Select>

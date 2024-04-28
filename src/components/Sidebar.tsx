@@ -20,10 +20,13 @@ import { useNavigate } from 'react-router-dom'
 import loginStore from '../store/loginStore'
 import { observer } from 'mobx-react'
 import { getAuth } from 'firebase/auth'
+import useIsLoggedIn from '../hooks/isLoggedIn'
 
 const Sidebar: FC = observer(() => {
   const navigate = useNavigate()
   const auth = getAuth()
+
+  const loggedIn = useIsLoggedIn()
 
   return (
     <Sheet
@@ -69,7 +72,7 @@ const Sidebar: FC = observer(() => {
       >
         <List>
           <ListItem>
-            <ListItemButton onClick={() => navigate('/')}>
+            <ListItemButton onClick={() => navigate('/app/dashboard')}>
               <Dashboard />
               <ListItemContent>
                 <Typography level="title-sm">Dashboard</Typography>
@@ -77,7 +80,7 @@ const Sidebar: FC = observer(() => {
             </ListItemButton>
           </ListItem>
           <ListItem>
-            <ListItemButton onClick={() => navigate('/assets')}>
+            <ListItemButton onClick={() => navigate('/app/assets')}>
               <AccountBalance />
               <ListItemContent>
                 <Typography level="title-sm">Assets</Typography>
@@ -85,10 +88,10 @@ const Sidebar: FC = observer(() => {
             </ListItemButton>
           </ListItem>
           <ListItem>
-            <ListItemButton onClick={() => navigate('/logs')}>
+            <ListItemButton onClick={() => navigate('/app/records')}>
               <ListIcon />
               <ListItemContent>
-                <Typography level="title-sm">Logs</Typography>
+                <Typography level="title-sm">Records</Typography>
               </ListItemContent>
             </ListItemButton>
           </ListItem>
@@ -102,7 +105,7 @@ const Sidebar: FC = observer(() => {
           <ListItem>
             <ListItemButton
               onClick={() => {
-                if (loginStore.loggedIn) {
+                if (loggedIn) {
                   auth.signOut()
                   loginStore.logout()
                 } else {
@@ -113,7 +116,7 @@ const Sidebar: FC = observer(() => {
             >
               <ListItemContent>
                 <Button color="neutral" fullWidth startDecorator={<Logout />}>
-                  {loginStore.loggedIn ? 'Log out' : 'Log in'}
+                  {loggedIn ? 'Log out' : 'Log in'}
                 </Button>
                 {/* <Typography level="title-sm">Log out</Typography> */}
               </ListItemContent>

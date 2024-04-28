@@ -3,9 +3,9 @@ import SheetContainer from '../components/SheetConatiner'
 import { Box, Button, Stack, Table, Typography } from '@mui/joy'
 import store from '../store/Store'
 import { formatDate, formatPrice } from '../utils'
-import AddNewModal from '../components/AddNewModal'
+import AddNewRecord from '../components/AddNewModal'
 
-const Logs: FC = () => {
+const Records: FC = () => {
   return (
     <Box sx={{ mb: 2 }}>
       <Stack
@@ -14,8 +14,8 @@ const Logs: FC = () => {
         alignItems={'center'}
         sx={{ mb: 2 }}
       >
-        <Typography level="h2">Logs</Typography>
-        <AddNewModal />
+        <Typography level="h2">Records</Typography>
+        <AddNewRecord />
       </Stack>
       <SheetContainer>
         <Table
@@ -67,4 +67,4 @@ const Logs: FC = () => {
   )
 }
 
-export default Logs
+export default Records
