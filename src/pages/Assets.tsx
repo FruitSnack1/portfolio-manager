@@ -28,7 +28,9 @@ const Assets: FC = () => {
             }
           >
             {store.assets.map((asset) => (
-              <Option value={asset.name}>{asset.name}</Option>
+              <Option key={asset.name} value={asset.name}>
+                {asset.name}
+              </Option>
             ))}
           </Select>
           <AddNewAsset />

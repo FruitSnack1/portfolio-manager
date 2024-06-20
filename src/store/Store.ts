@@ -1,7 +1,6 @@
 import { makeAutoObservable } from 'mobx'
-// import { data } from './data'
-import { randomUUID } from 'crypto'
-import { v4 as uuid } from 'uuid'
+import { Asset, getAssets } from '../api/assets'
+import { Log, getLogs } from '../api/logs'
 
 type LogData = {
   asset: string
@@ -11,29 +10,20 @@ type LogData = {
   id: string
 }
 
-export type Asset = {
-  name: string
-  balance: number
-  deposit: number
-  plPercent: string
-  pl: number
-  share: string
-}
-
 type AssetData = {
   balance: number
 }
 
 class Store {
-  data: LogData[]
+  assetsData: Asset[] = []
+  logsData: Log[] = []
 
-  constructor(data: LogData[]) {
+  constructor() {
+    ;(async () => {
+      this.assetsData = await getAssets()
+      this.logsData = await getLogs()
+    })()
     makeAutoObservable(this)
-    this.data = data
-  }
-
-  get filtredData() {
-    return this.data.filter((item) => item.date === '2023-01-06T23:00:00.000Z')
   }
 
   get balance(): number {
@@ -41,11 +31,11 @@ class Store {
     return this.latests().reduce((a, b) => a + b.balance, 0)
   }
 
-  private latests(): LogData[] {
-    const latestDate = this.data.reduce((a, b) => {
+  private latests(): Log[] {
+    const latestDate = this.logsData.reduce((a, b) => {
       return a.date > b.date ? a : b
     }).date
-    return this.data.filter((item) => item.date === latestDate)
+    return this.logsData.filter((item) => item.date === latestDate)
   }
 
   get assets(): Asset[] {
@@ -147,28 +137,8 @@ class Store {
         this.latests().find((item) => item.asset === asset)?.balance ?? 0,
     }
   }
-
-  remove(id: string): void {
-    console.log('remove', id)
-    const newData = this.data.filter((item) => item.id !== id)
-    console.log(newData)
-    localStorage.setItem('data', JSON.stringify(newData))
-    this.data = newData
-  }
-
-  add(asset: string, date: string, deposit: number, balance: number): void {
-    this.data.push({
-      asset,
-      deposit,
-      balance,
-      date,
-      id: uuid(),
-    })
-
-    localStorage.setItem('data', JSON.stringify(this.data))
-  }
 }
 
-const store = new Store(JSON.parse(localStorage.getItem('data') ?? '[]'))
+const store = new Store()
 
 export default store

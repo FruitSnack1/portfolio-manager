@@ -1,21 +1,11 @@
+import { FormControl, FormLabel, Input, Snackbar } from '@mui/joy'
 import Button from '@mui/joy/Button'
 import Modal from '@mui/joy/Modal'
 import ModalClose from '@mui/joy/ModalClose'
-import Typography from '@mui/joy/Typography'
 import Sheet from '@mui/joy/Sheet'
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  Option,
-  Select,
-  Snackbar,
-} from '@mui/joy'
-import store from '../store/Store'
+import Typography from '@mui/joy/Typography'
 import { useState } from 'react'
-import { randomUUID } from 'crypto'
-import { addAsset, getAssets } from '../api/assets'
-import { getAuth } from 'firebase/auth'
+import { addAsset } from '../api/assets'
 
 export default function AddNewAsset() {
   const [open, setOpen] = useState<boolean>(false)
@@ -26,11 +16,9 @@ export default function AddNewAsset() {
   // getAssets()
 
   const addNew = async () => {
-    const result = await addAsset(name)
-    if (result) {
-      setOpen(false)
-      setSnackbarOpen(true)
-    }
+    await addAsset(name)
+    setOpen(false)
+    setSnackbarOpen(true)
   }
 
   return (

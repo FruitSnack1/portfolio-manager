@@ -1,20 +1,22 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  getDocs,
-  query,
-  setDoc,
-} from 'firebase/firestore'
-import { db } from '../fireapp'
-import { getAuth } from 'firebase/auth'
+import { addDocsToCollection, getDocsFromCollection } from './api'
 
-const colRef = collection(db, 'logs')
+export type Log = {
+  id: string
+  assetId: string
+  date: Date
+  deposit: number
+  balance: number
+}
 
-export const getLogs = async () => {
-  const q = query(colRef)
-  const docs = await getDocs(q)
-  return docs.docs.map((doc) => doc.data())
+export const getLogs = async (): Promise<Log[]> => {
+  const docs = await getDocsFromCollection('logs')
+  const logs = docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+    date: doc.data().date.toDate(),
+  }))
+
+  return logs as Log[]
 }
 
 export const addLog = async (
@@ -22,17 +24,12 @@ export const addLog = async (
   date: Date,
   deposit: number,
   balance: number
-) => {
-  const auth = getAuth()
-  console.log('adding docs', auth.currentUser?.uid)
-  if (!auth.currentUser) return
-
-  const userDoc = doc(db, 'users', auth.currentUser.uid)
-  const assetsCol = collection(userDoc, 'logs')
-  return await addDoc(assetsCol, {
+): Promise<void> => {
+  await addDocsToCollection('logs', {
     assetId,
     date,
     deposit,
     balance,
   })
+  return
 }

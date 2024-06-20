@@ -11,7 +11,6 @@ const {
   REACT_APP_MESSAGINGSENDERID,
   REACT_APP_APPID,
 } = process.env
-console.log(REACT_APP_APIKEY)
 
 const firebaseConfig = {
   apiKey: REACT_APP_APIKEY,

@@ -1,11 +1,23 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import SheetContainer from '../components/SheetConatiner'
 import { Box, Button, Stack, Table, Typography } from '@mui/joy'
 import store from '../store/Store'
 import { formatDate, formatPrice } from '../utils'
 import AddNewRecord from '../components/AddNewModal'
+import { Log, getLogs } from '../api/logs'
 
 const Records: FC = () => {
+  const [logs, setLogs] = useState<Log[]>([])
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      const logs = await getLogs()
+      setLogs(logs)
+      console.log('logs', logs)
+    }
+    fetchLogs()
+  }, [])
+
   return (
     <Box sx={{ mb: 2 }}>
       <Stack
@@ -35,18 +47,22 @@ const Records: FC = () => {
           <thead>
             <th>Asset</th>
             <th>Date</th>
-            <th>Deposit</th>
-            <th>Balance</th>
+            <th style={{ textAlign: 'right' }}>Deposit</th>
+            <th style={{ textAlign: 'right' }}>Balance</th>
             <th></th>
           </thead>
           <tbody>
-            {store.data.map((row) => (
-              <tr key={row.date}>
-                <td>{row.asset}</td>
-                <td>{formatDate(row.date)}</td>
-                <td>{formatPrice(row.deposit)}</td>
-                <td>{formatPrice(row.balance)}</td>
-                <td>
+            {logs.map((row, i) => (
+              <tr key={i}>
+                <td>{row.assetId}</td>
+                <td>{formatDate(row.date.toISOString())}</td>
+                <td style={{ textAlign: 'right' }}>
+                  {formatPrice(row.deposit)}
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  {formatPrice(row.balance)}
+                </td>
+                <td style={{ textAlign: 'right' }}>
                   <Button
                     onClick={() => {
                       store.remove(row.id)
