@@ -6,6 +6,7 @@ import store from '../../store/Store'
 const ShareChart: FC = () => {
   return (
     <SheetContainer>
+      <></>
       <PieChart
         series={[
           {

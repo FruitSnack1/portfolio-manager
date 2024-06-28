@@ -1,53 +1,70 @@
 import { useState } from 'react'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { Button, Input, Typography } from '@mui/joy'
+import { Box, Button, Divider, Input, Stack, Typography } from '@mui/joy'
 import loginStore from '../store/loginStore'
-import { Router, useNavigate } from 'react-router-dom'
+import { Link, Router, useNavigate } from 'react-router-dom'
+import ColorSchemeToggle from '../components/ColorSchemeToggle'
+import LoginWrapper from '../components/LoginWrapper'
+import { useForm } from 'react-hook-form'
+import FormError from '../components/FormError'
 
 function Login() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState(null)
-
   const auth = getAuth()
   const navigate = useNavigate()
 
-  const register = async (event: any) => {
-    event.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
+
+  const submit = handleSubmit(async (data) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password)
-      console.log('autho cur', auth.currentUser)
+      await signInWithEmailAndPassword(auth, data.email, data.password)
       navigate('/app')
       loginStore.login()
     } catch (error: any) {
-      setError(error.message)
+      setError('root', { message: 'Invalid email or password' })
     }
-  }
+  })
 
   return (
-    <form onSubmit={register}>
-      {error && <p>{error}</p>}
-      <Typography level="h3" sx={{ mb: 2 }}>
-        Login
-      </Typography>
-      <Input
-        sx={{ mb: 1 }}
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <Input
-        sx={{ mb: 1 }}
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Button type="submit" fullWidth>
-        Sign in
-      </Button>
-    </form>
+    <LoginWrapper>
+      <form onSubmit={submit}>
+        <Typography level="h3" sx={{ mb: 2 }}>
+          Login
+        </Typography>
+        <Input
+          {...register('email', { required: 'Email required' })}
+          color={errors.email ? 'danger' : 'neutral'}
+          sx={{ mb: 1 }}
+          type="email"
+          placeholder="Email"
+        />
+        {errors.email && <FormError>{errors.email.message}</FormError>}
+        <Input
+          {...register('password', { required: 'Password required' })}
+          color={errors.password ? 'danger' : 'neutral'}
+          sx={{ mb: 1 }}
+          type="password"
+          placeholder="Password"
+        />
+        {errors.password && <FormError>{errors.password.message}</FormError>}
+        {errors.root && <FormError>{errors.root.message}</FormError>}
+        <Button type="submit" fullWidth>
+          Sign in
+        </Button>
+        <Box sx={{ textAlign: 'center' }}>
+          Don't have an account? <Link to={'/register'}>Register</Link>
+        </Box>
+      </form>
+    </LoginWrapper>
   )
 }
 

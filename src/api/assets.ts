@@ -6,13 +6,12 @@ export type Asset = {
 }
 
 export const getAssets = async (): Promise<Asset[]> => {
-  const docs = await getDocsFromCollection('logs')
-  const logs = docs.map((doc) => ({
+  const docs = await getDocsFromCollection('assets')
+  const assets = docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
   }))
-
-  return logs as Asset[]
+  return assets as Asset[]
 }
 
 export const addAsset = async (name: string) => {

@@ -8,13 +8,14 @@ import { getAssets } from '../api/assets'
 import { DocumentData } from 'firebase/firestore'
 
 type PLProps = {
-  plPercent: string
+  plPercent: number
   pl: number
 }
 
 const PL: FC<PLProps> = ({ plPercent, pl }) => {
   return (
     <Typography
+      textAlign={'right'}
       color={pl < 0 ? 'danger' : 'success'}
       startDecorator={pl < 0 ? <ArrowDropDown /> : <ArrowDropUp />}
     >
@@ -29,7 +30,6 @@ const AssetTable: FC = () => {
   useEffect(() => {
     const fetchAssets = async () => {
       const assets = await getAssets()
-      console.log('assets', assets)
       setAssets(assets)
     }
     fetchAssets()
@@ -59,15 +59,15 @@ const AssetTable: FC = () => {
           </tr>
         </thead>
         <tbody>
-          {assets.map((row) => (
-            <tr key={row.name}>
-              <td>{row.name}</td>
-              {/* <td>{formatPrice(row.deposit)}</td>
-              <td>{formatPrice(row.balance)}</td>
+          {store.assetsDetails().map((detail) => (
+            <tr key={detail.asset}>
+              <td>{detail.asset}</td>
+              <td>{formatPrice(detail.deposit)}</td>
+              <td>{formatPrice(detail.balance)}</td>
               <td>
-                <PL pl={row.pl} plPercent={row.plPercent} />
+                <PL pl={detail.pl} plPercent={detail.plPercent} />
               </td>
-              <td>{row.share}%</td> */}
+              <td>{detail.share}%</td>
             </tr>
           ))}
         </tbody>

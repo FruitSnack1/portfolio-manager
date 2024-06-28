@@ -11,7 +11,7 @@ const CurrentBalance: FC = () => {
       <Box sx={{ p: 3 }}>
         <Typography level="h2">{formatPrice(store.balance)}</Typography>
         <Typography color="success" startDecorator={<ArrowDropUp />}>
-          {formatPrice(store.balance)} (15.3%)
+          {formatPrice(store.profit)} ({store.profitPercent}%)
         </Typography>
       </Box>
     </SheetContainer>

@@ -43,7 +43,7 @@ const AssetHistoryChart: FC<AssetHistoryChartProps> = ({
           $
         </Button>
       </ButtonGroup>
-      <BarChart
+      {/* <BarChart
         dataset={store.historyChartData(percent, assetName)}
         xAxis={[{ scaleType: 'band', dataKey: 'month' }]}
         series={store.assets
@@ -65,7 +65,7 @@ const AssetHistoryChart: FC<AssetHistoryChartProps> = ({
             },
           },
         }}
-      />
+      /> */}
     </Box>
   )
 }

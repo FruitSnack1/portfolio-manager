@@ -7,7 +7,6 @@ import { Box } from '@mui/joy'
 import { formatPrice } from '../../utils'
 
 const BalanceChart: FC = () => {
-  console.log(store.data)
   const valueFormatter = (value: number) => {
     return formatPrice(value)
   }

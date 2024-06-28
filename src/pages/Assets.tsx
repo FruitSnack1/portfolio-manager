@@ -1,13 +1,16 @@
 import { Box, Grid, Option, Select, Sheet, Typography } from '@mui/joy'
-import { FC, useState } from 'react'
-import store, { Asset } from '../store/Store'
+import { FC, useMemo, useState } from 'react'
+import store from '../store/Store'
 import SheetContainer from '../components/SheetConatiner'
 import AssetHistoryChart from '../components/charts/AssetHistoryChart'
 import { formatPrice } from '../utils'
 import AddNewAsset from '../components/AddNewAsset'
+import { Asset } from '../api/assets'
 
 const Assets: FC = () => {
-  const [asset, setAsset] = useState<Asset>(store.assets[0])
+  const [assetName, setAssetName] = useState<string>(store.assets[0].name)
+
+  const asset = useMemo(() => store.assetsDetails(assetName)[0], [assetName])
 
   return (
     <>
@@ -21,10 +24,7 @@ const Assets: FC = () => {
           <Select
             placeholder="Choose one…"
             onChange={(_, newValue: string | null) =>
-              setAsset(
-                store.assets.find((asset) => asset.name === newValue) ??
-                  store.assets[0]
-              )
+              setAssetName(newValue ?? '')
             }
           >
             {store.assets.map((asset) => (
@@ -39,11 +39,11 @@ const Assets: FC = () => {
           <SheetContainer>
             <Box sx={{ p: 5 }}>
               <Typography level="h4" sx={{ mb: 2, color: 'gray' }}>
-                {asset?.name}
+                {asset.asset}
               </Typography>
               <Box sx={{ textAlign: 'left', display: 'inline' }}>
                 <Typography level="h1" sx={{ mb: 0 }} fontWeight={800}>
-                  {formatPrice(asset?.balance)}
+                  {formatPrice(asset.balance)}
                 </Typography>
                 <Typography
                   color={
@@ -58,8 +58,8 @@ const Assets: FC = () => {
                 </Typography>
               </Box>
               <AssetHistoryChart
-                dataset={store.historyChartData(true, asset.name)}
-                assetName={asset.name}
+                dataset={store.historyChartData(true, asset.asset)}
+                assetName={asset.asset}
               />
             </Box>
           </SheetContainer>

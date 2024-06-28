@@ -11,11 +11,13 @@ import {
   Select,
   Snackbar,
 } from '@mui/joy'
-import { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { getAssets } from '../api/assets'
 import { addLog } from '../api/logs'
+import store from '../store/Store'
+import { observer } from 'mobx-react-lite'
 
-export default function AddNewRecord() {
+const AddNewRecord: FC = observer(() => {
   const [open, setOpen] = useState<boolean>(false)
 
   const [asset, setAsset] = useState<string>('')
@@ -31,13 +33,12 @@ export default function AddNewRecord() {
 
   const geta = async () => {
     const assets = await getAssets()
-    console.log(assets)
     setAssets(assets.map((asset) => asset.name))
     // if (assets.length > 0) setAsset(assets[0].name)
     return assets
   }
   useEffect(() => {
-    geta()
+    store.fetchData()
   }, [])
 
   const addNew = async () => {
@@ -94,9 +95,9 @@ export default function AddNewRecord() {
           <Select
             onChange={(_, newValue: string | null) => setAsset(newValue ?? '')}
           >
-            {assets.map((asset, i) => (
-              <Option key={asset} value={asset}>
-                {asset}
+            {store.assets.map((asset, i) => (
+              <Option key={asset.id} value={asset.name}>
+                {asset.name}
               </Option>
             ))}
           </Select>
@@ -105,7 +106,6 @@ export default function AddNewRecord() {
             <Input
               type="date"
               onChange={({ target }) => {
-                console.log(target.value)
                 setDate(target.value)
               }}
             />
@@ -133,4 +133,6 @@ export default function AddNewRecord() {
       </Modal>
     </>
   )
-}
+})
+
+export default AddNewRecord

@@ -13,7 +13,6 @@ const Records: FC = () => {
     const fetchLogs = async () => {
       const logs = await getLogs()
       setLogs(logs)
-      console.log('logs', logs)
     }
     fetchLogs()
   }, [])
@@ -52,9 +51,9 @@ const Records: FC = () => {
             <th></th>
           </thead>
           <tbody>
-            {logs.map((row, i) => (
+            {store.logs.map((row, i) => (
               <tr key={i}>
-                <td>{row.assetId}</td>
+                <td>{row.asset}</td>
                 <td>{formatDate(row.date.toISOString())}</td>
                 <td style={{ textAlign: 'right' }}>
                   {formatPrice(row.deposit)}
@@ -65,7 +64,7 @@ const Records: FC = () => {
                 <td style={{ textAlign: 'right' }}>
                   <Button
                     onClick={() => {
-                      store.remove(row.id)
+                      store.removeLog(row.id)
                     }}
                     variant="outlined"
                     color="neutral"

@@ -2,7 +2,7 @@ import { addDocsToCollection, getDocsFromCollection } from './api'
 
 export type Log = {
   id: string
-  assetId: string
+  asset: string
   date: Date
   deposit: number
   balance: number
@@ -20,13 +20,13 @@ export const getLogs = async (): Promise<Log[]> => {
 }
 
 export const addLog = async (
-  assetId: string,
+  asset: string,
   date: Date,
   deposit: number,
   balance: number
 ): Promise<void> => {
   await addDocsToCollection('logs', {
-    assetId,
+    asset,
     date,
     deposit,
     balance,
